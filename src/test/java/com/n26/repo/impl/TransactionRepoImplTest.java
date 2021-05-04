@@ -5,6 +5,8 @@ import com.n26.repo.TransactionRepo;
 import com.n26.repo.impl.TransactionRepoImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+
 
 public class TransactionRepoImplTest {
 

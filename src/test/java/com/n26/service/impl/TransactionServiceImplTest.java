@@ -1,6 +1,7 @@
 package com.n26.service.impl;
 
 import com.n26.domain.Transaction;
+import com.n26.exception.TransactionFromFutureException;
 import com.n26.repo.TransactionRepo;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +38,19 @@ public class TransactionServiceImplTest {
     Transaction transaction =
         new Transaction(
             BigDecimal.TEN,
-            ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:35.000Z"), ZoneId.of("UTC")));
+            ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:26.000Z"), ZoneId.of("UTC")));
     doNothing().when(transactionRepo).addTransaction(transaction);
     assertTrue(transactionService.addTransaction(transaction));
     verify(transactionRepo, atLeastOnce()).addTransaction(transaction);
+  }
+
+  @Test(expected = TransactionFromFutureException.class)
+  public void addTransactionShouldThrowTransactionFromFutureException() throws Exception{
+    Transaction transaction =
+            new Transaction(
+                    BigDecimal.TEN,
+                    ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:36.000Z"), ZoneId.of("UTC")));
+    transactionService.addTransaction(transaction);
   }
 
   @Test

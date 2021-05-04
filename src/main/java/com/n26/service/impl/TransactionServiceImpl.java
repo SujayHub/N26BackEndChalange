@@ -1,6 +1,7 @@
 package com.n26.service.impl;
 
 import com.n26.domain.Transaction;
+import com.n26.exception.TransactionFromFutureException;
 import com.n26.repo.TransactionRepo;
 import com.n26.service.TransactionService;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,16 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public boolean addTransaction(final Transaction transaction) {
-      ZonedDateTime timestampFrom60SecInPast = ZonedDateTime.now(clock).minusSeconds(60L);
-      if (transaction.getTimestampInUtc().isBefore(timestampFrom60SecInPast)) {
+      ZonedDateTime timeRightNow = ZonedDateTime.now(clock);
+      if(transaction.getTimestampInUtc().isAfter(timeRightNow)){
+          throw new TransactionFromFutureException(transaction);
+      }
+      ZonedDateTime timestampFrom60SecInPast = timeRightNow.minusSeconds(60L);
+    if (transaction.getTimestampInUtc().isBefore(timestampFrom60SecInPast)) {
       return false;
     }
-      transactionRepo.addTransaction(transaction);
-      return true;
+    transactionRepo.addTransaction(transaction);
+    return true;
   }
 
   @Override
@@ -33,8 +38,8 @@ public class TransactionServiceImpl implements TransactionService {
     return transactionRepo.getTransactionsInATimeRange(fromTime, toTime);
   }
 
-    @Override
-    public void deleteTransactions() {
-        transactionRepo.deleteAll();
-    }
+  @Override
+  public void deleteTransactions() {
+    transactionRepo.deleteAll();
+  }
 }
