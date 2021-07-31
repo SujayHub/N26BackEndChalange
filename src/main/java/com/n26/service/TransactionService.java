@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TransactionService {
 
-    boolean addTransaction(final @NotNull Transaction transaction);
+    void addTransaction(final @NotNull Transaction transaction);
     List<Transaction> getTransactionsInATimeRange(final ZonedDateTime fromTime, final ZonedDateTime toTime);
     void deleteTransactions();
 }

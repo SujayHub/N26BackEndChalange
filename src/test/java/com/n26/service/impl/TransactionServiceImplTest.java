@@ -1,25 +1,29 @@
 package com.n26.service.impl;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import com.n26.domain.Transaction;
 import com.n26.exception.TransactionFromFutureException;
+import com.n26.exception.TransactionFromPastException;
 import com.n26.repo.TransactionRepo;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionServiceImplTest {
@@ -28,38 +32,38 @@ public class TransactionServiceImplTest {
   private TransactionServiceImpl transactionService;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     Clock clock = Clock.fixed(Instant.parse("2021-05-02T10:20:30.000Z"), ZoneId.of("UTC"));
     transactionService = new TransactionServiceImpl(transactionRepo, clock);
   }
 
   @Test
-  public void addTransactionShouldReturnTrueWhenTransactionTimeStampIsWithIn60SecRange() {
+  public void addTransactionShouldAddATransactionWhenTransactionTimeStampIsWithIn60SecRange() {
     Transaction transaction =
         new Transaction(
             BigDecimal.TEN,
             ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:26.000Z"), ZoneId.of("UTC")));
     doNothing().when(transactionRepo).addTransaction(transaction);
-    assertTrue(transactionService.addTransaction(transaction));
+    transactionService.addTransaction(transaction);
     verify(transactionRepo, atLeastOnce()).addTransaction(transaction);
   }
 
   @Test(expected = TransactionFromFutureException.class)
-  public void addTransactionShouldThrowTransactionFromFutureException() throws Exception{
+  public void addTransactionShouldThrowTransactionFromFutureException() {
     Transaction transaction =
-            new Transaction(
-                    BigDecimal.TEN,
-                    ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:36.000Z"), ZoneId.of("UTC")));
+        new Transaction(
+            BigDecimal.TEN,
+            ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:20:36.000Z"), ZoneId.of("UTC")));
     transactionService.addTransaction(transaction);
   }
 
-  @Test
-  public void addTransactionShouldReturnFalseWhenTransactionTimeStampIsWithIn60SecRange() {
+  @Test(expected = TransactionFromPastException.class)
+  public void addTransactionShouldThrowTransactionFromPastException() {
     Transaction transaction =
         new Transaction(
             BigDecimal.TEN,
             ZonedDateTime.ofInstant(Instant.parse("2021-05-02T10:19:25.000Z"), ZoneId.of("UTC")));
-    assertFalse(transactionService.addTransaction(transaction));
+    transactionService.addTransaction(transaction);
     verifyNoMoreInteractions(transactionRepo);
   }
 
