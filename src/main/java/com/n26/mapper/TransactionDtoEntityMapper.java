@@ -2,13 +2,12 @@ package com.n26.mapper;
 
 import com.n26.domain.Transaction;
 import com.n26.dto.TransactionDto;
-import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionDtoEntityMapper implements DtoEntityMapper<TransactionDto, Transaction> {

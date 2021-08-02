@@ -49,6 +49,27 @@ public class TransactionControllerTest {
   @MockBean private TransactionService transactionService;
   @MockBean private TransactionDtoEntityMapper transactionDtoEntityMapper;
 
+  private static Transaction getTransactionObject(BigDecimal amount, ZonedDateTime zonedDateTime) {
+    return Transaction.builder().amount(amount).timestampInUtc(zonedDateTime).build();
+  }
+
+  private static String getValidTransactionRequestJsonBody(String amount, String timeStamp)
+      throws JsonProcessingException, ParseException {
+    TransactionDto transactionDto =
+        TransactionDto.builder()
+            .amount(amount)
+            .timestamp(TIMESTAMP_FORMATTER.parse(timeStamp))
+            .build();
+    return OBJECT_MAPPER.writeValueAsString(transactionDto);
+  }
+
+  private static String nonParsableTransactionRequestBody() {
+    return "{\n"
+        + "    \"timestamp\": \"4/23/2018 11:32 PM\",\n"
+        + "    \"amount\": \"262.01\"\n"
+        + "}";
+  }
+
   @Test
   public void addTransactionShouldReturnStatusCreatedWhenTransactionTimeStampIsWithIn60SecRange()
       throws Exception {
@@ -153,26 +174,5 @@ public class TransactionControllerTest {
     this.mockMvc
         .perform(delete("/transactions").contentType(APPLICATION_JSON_UTF8))
         .andExpect(status().isNoContent());
-  }
-
-  private static Transaction getTransactionObject(BigDecimal amount, ZonedDateTime zonedDateTime) {
-    return Transaction.builder().amount(amount).timestampInUtc(zonedDateTime).build();
-  }
-
-  private static String getValidTransactionRequestJsonBody(String amount, String timeStamp)
-      throws JsonProcessingException, ParseException {
-    TransactionDto transactionDto =
-        TransactionDto.builder()
-            .amount(amount)
-            .timestamp(TIMESTAMP_FORMATTER.parse(timeStamp))
-            .build();
-    return OBJECT_MAPPER.writeValueAsString(transactionDto);
-  }
-
-  private static String nonParsableTransactionRequestBody() {
-    return "{\n"
-        + "    \"timestamp\": \"4/23/2018 11:32 PM\",\n"
-        + "    \"amount\": \"262.01\"\n"
-        + "}";
   }
 }

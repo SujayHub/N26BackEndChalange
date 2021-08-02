@@ -5,12 +5,11 @@ import com.n26.exception.TransactionFromFutureException;
 import com.n26.exception.TransactionFromPastException;
 import com.n26.repo.TransactionRepo;
 import com.n26.service.TransactionService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -21,11 +20,11 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void addTransaction(final Transaction transaction) {
-      ZonedDateTime timeRightNow = ZonedDateTime.now(clock);
-      if(transaction.getTimestampInUtc().isAfter(timeRightNow)){
-          throw new TransactionFromFutureException(transaction);
-      }
-      ZonedDateTime timestampFrom60SecInPast = timeRightNow.minusSeconds(60L);
+    ZonedDateTime timeRightNow = ZonedDateTime.now(clock);
+    if (transaction.getTimestampInUtc().isAfter(timeRightNow)) {
+      throw new TransactionFromFutureException(transaction);
+    }
+    ZonedDateTime timestampFrom60SecInPast = timeRightNow.minusSeconds(60L);
     if (transaction.getTimestampInUtc().isBefore(timestampFrom60SecInPast)) {
       throw new TransactionFromPastException(transaction);
     }

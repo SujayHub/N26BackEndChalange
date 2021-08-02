@@ -29,6 +29,16 @@ public class StatisticsControllerTest {
 
   @MockBean private StatisticsService statisticsService;
 
+  private static Statistics getMockStatistics() {
+    Statistics statistics = new Statistics();
+    statistics.setSum(BigDecimal.valueOf(1000));
+    statistics.setAvg(BigDecimal.valueOf(100.53));
+    statistics.setMax(BigDecimal.valueOf(200000.49));
+    statistics.setMin(BigDecimal.valueOf(50.23));
+    statistics.setCount(10);
+    return statistics.withScale(2, HALF_UP);
+  }
+
   @Test
   public void getStatisticsShouldReturnStatusOk() throws Exception {
     doReturn(getMockStatistics()).when(statisticsService).getStatisticsRounded();
@@ -42,15 +52,5 @@ public class StatisticsControllerTest {
         .andExpect(jsonPath("$.max", is("200000.49")))
         .andExpect(jsonPath("$.count", is(10)))
         .andExpect(jsonPath("$.sum", is("1000.00")));
-  }
-
-  private static Statistics getMockStatistics() {
-    Statistics statistics = new Statistics();
-    statistics.setSum(BigDecimal.valueOf(1000));
-    statistics.setAvg(BigDecimal.valueOf(100.53));
-    statistics.setMax(BigDecimal.valueOf(200000.49));
-    statistics.setMin(BigDecimal.valueOf(50.23));
-    statistics.setCount(10);
-    return statistics.withScale(2, HALF_UP);
   }
 }

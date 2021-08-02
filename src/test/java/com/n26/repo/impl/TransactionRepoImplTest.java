@@ -1,13 +1,9 @@
 package com.n26.repo.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import com.n26.domain.Transaction;
 import com.n26.repo.TransactionRepo;
-import com.n26.repo.impl.TransactionRepoImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,16 +11,15 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Before;
+import org.junit.Test;
 
 public class TransactionRepoImplTest {
 
   private TransactionRepo transactionRepo;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     transactionRepo = new TransactionRepoImpl();
   }
 

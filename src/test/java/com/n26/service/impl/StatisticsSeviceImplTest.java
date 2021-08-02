@@ -1,21 +1,25 @@
 package com.n26.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import com.n26.domain.Statistics;
 import com.n26.domain.Transaction;
 import com.n26.service.TransactionService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.*;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StatisticsSeviceImplTest {
@@ -25,7 +29,7 @@ public class StatisticsSeviceImplTest {
   private Clock clock;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     clock = Clock.fixed(Instant.parse("2021-05-02T10:20:30.000Z"), ZoneId.of("UTC"));
     statisticsService = new StatisticsSeviceImpl(transactionService, clock);
   }

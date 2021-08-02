@@ -4,5 +4,5 @@ import com.n26.domain.Statistics;
 
 public interface StatisticsService {
 
-    Statistics getStatisticsRounded();
+  Statistics getStatisticsRounded();
 }

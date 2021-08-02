@@ -2,13 +2,12 @@ package com.n26.repo.impl;
 
 import com.n26.domain.Transaction;
 import com.n26.repo.TransactionRepo;
-import org.springframework.stereotype.Repository;
-
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class TransactionRepoImpl implements TransactionRepo {
