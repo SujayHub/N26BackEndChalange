@@ -40,7 +40,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(TransactionController.class)
 public class TransactionControllerTest {
 
-  private static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
+  private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
   private static final DateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat(TIMESTAMP_FORMAT);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
